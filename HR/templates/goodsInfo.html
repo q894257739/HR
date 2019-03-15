@@ -7,7 +7,7 @@
     <title>商品详情</title>
 
 
-    <link rel="stylesheet" href="{% static 'css/iconfont.woff' %}">
+{#    <link rel="stylesheet" href="{% static 'css/iconfont.woff' %}">#}
 
     <link rel="stylesheet" href="{% static 'css/iconfont.css' %}">
     <link rel="stylesheet" href="{% static 'css/goodsInfo.css' %}">
@@ -702,42 +702,42 @@
             <div class="good_info">
                 <div class="info_left">
                     <div class="good_img">
-                        <img src="{% static '' %}" alt="">
+                        <img src="{{ goods.bigimg }}" alt="">
                         <div class="move"></div>
                     </div>
                     <div class="small_img">
                         <div class="scrollbutton smallImgUp ico"></div>
                         <div class="imgMenu">
                             <ul>
-                                <li class="cur"><img src="{% static '' %}" alt=""></li>
-                                <li><img src="{% static '' %}" alt=""></li>
-                                <li><img src="{% static '' %}" alt=""></li>
-                                <li><img src="{% static '' %}" alt=""></li>
-                                <li><img src="{% static '' %}" alt=""></li>
+                                <li class="cur"><img src="{{ goods.smallimg1 }}" alt=""></li>
+                                <li><img src="{{ goods.smallimg2 }}" alt=""></li>
+                                <li><img src="{{ goods.smallimg3 }}" alt=""></li>
+                                <li><img src="{{ goods.smallimg4 }}" alt=""></li>
+                                <li><img src="{{ goods.smallimg5 }}" alt=""></li>
                             </ul>
                         </div>
                         <div class="scrollbutton smallImgDown ico disabled"></div>
                     </div>
                     <div class="bigimg" style="">
                         <div style="position: absolute">
-                            <img src="{% static '' %}" alt="">
+                            <img src="{{ goods.bigimg }}" alt="">
                         </div>
                     </div>
                 </div>
                 <div class="info_right">
-                    <span class="name"></span>
-                    <span class="name"></span>
+                    <span class="name">{{ goods.name }}</span>
+                    <span class="name">{{ goods.e_name }}</span>
                     <span class="introduce">
                         <div style="margin-right: 12px; float: left">
                             <img src="{% static 'images/France.png' %}" style="width: 20px;height: 20px;">
                         </div>
                         <div style="height: 20px; line-height: 20px;">法国|保税</div>
                     </span>
-                    <span class="introduce"></span>
+                    <span class="introduce" style="color: gold">{{ goods.intro }}</span>
                     <div class="money">
                         含税价
                         <p class="textPrimary">
-                            ¥<strong></strong>.00
+                            ¥<strong>{{ goods.price }}</strong>.00
                         </p>
                         <div id="valoremBox" style="display: inline-block;position: relative;">
                             <p class="valoremTax">
@@ -754,12 +754,17 @@
                         <a class="less"></a>
                         <input class="quantity_txt" value="1">
                         <a class="add"></a>
-                        <span class="kucun">库存:83&nbsp;</span>
+                        <span class="kucun">库存:{{ goods.repertory }}&nbsp;</span>
                     </div>
                     <div class="ads">
                         <span class="title">送至</span>
                         <div class="ads_list">
-
+                            <select name="" id="">
+                                <option value="">深圳</option>
+                                <option value="">上海</option>
+                                <option value="">深圳</option>
+                                <option value="">深圳</option>
+                            </select>
                         </div>
                         <span class="lat">有货</span>
                     </div>

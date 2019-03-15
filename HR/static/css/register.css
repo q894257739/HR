@@ -1,6 +1,6 @@
 .reg_body{
     padding: 35px 45px 45px 45px;
-    background: #fff url(../images/50432.png) repeat-x;
+    background: #fff url(/static/images/50432.png) repeat-x;
 }
 .reg_body_c{
     margin-left: 200px;
@@ -23,7 +23,7 @@
     padding: 0 11px;
     color: #333;
     font-size: 12px;
-    background: url(../images/50370.png) repeat-x;
+    background: repeat-x;
     border: 1px solid #d1d1d1;
     -webkit-transition: all .25s;
     -moz-transition: all .25s;
@@ -58,3 +58,13 @@
 .text_input_span{
     text-align: center;
 }
+
+.veritycode{
+    position: relative;
+    top: 20px;
+}
+
+.show{
+    background: url(/static/images/50377.png);
+}
+

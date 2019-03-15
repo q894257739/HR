@@ -2,124 +2,89 @@
  * Created by Administrator on 2016/9/29.
  */
 $(function(){
-    //验证码
-    function getRandomString(len) {
-        var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; // 默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1
-        var maxPos = $chars.length;
-        var pwd = '';
-        for ( var i = 0; i < len; i++) {
-            pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
-        }
-        return pwd;
-    }
-    $('.text_input_span').html(getRandomString(4));
 
-    console.log($.cookie('user'));
-    //表单验证
-    $('#password').attr("flag","false");
-    $('#text').attr("flag","false");
-    $('#password').change(function(){
-        if ($('#password').val()){
-            var regEx  = /^.{6,20}$/g;
-            if ($('#password').val()){
-                if (regEx.test($('#password').val())){
-                    $(this).blur(function(){
-                        $(this).css("border","1px solid #dadada")
-                    });
-                    $(this).parent().find('.reg_span').html("");
-                    $('#password').attr("flag","true")
-                }else {
-                    $(this).unbind("blur");
-                    $(this).parent().find('.reg_span').html("请确认您输入的密码，密码为6-20位字符。");
-                    $(this).css("border","1px solid #e60000")
-                }
-            }
-        }else {
-            $(this).unbind("blur");
-            $(this).parent().find('.reg_span').html("请输入您的密码");
+    $('#update_code').click(function () {
+        $.cookie('username',$('#username').val())
+        $.cookie('password',$('#password').val())
+    })
+
+    $('#username').val(localStorage.getItem('username'))
+    $('#password').val(localStorage.getItem('password'))
+
+    console.log(localStorage.getItem('true'))
+    if (localStorage.getItem('true') == '1'){
+        $('#true').addClass('show')
+        $('#true').attr('flag','true')
+        $('#x_span').html('')
+        localStorage.setItem('username',$('#username').val())
+        localStorage.setItem('password',$('#password').val())
+        localStorage.setItem('true','1')
+    }
+
+    $('#username').blur(function () {
+        if ($(this).val().length<4 || $(this).val().length > 10){
+            $(this).next().html('请输入4-10位的字符')
+            $('#u_span').css('color','#e60000')
             $(this).css("border","1px solid #e60000")
-        }
-    });
-    $("#text").change(function(){
-        if ($('#text').val()){
-            if ($('#text').val() == $('.text_input_span').html()){
-                $(this).blur(function(){
-                    $(this).css("border","1px solid #dadada")
-                });
-                $(this).parent().find('.reg_span').html("");
-                $("#text").attr("flag","true");
-            }else {
-                $(this).unbind("blur");
-                $(this).parent().find('.reg_span').html("请填写正确的验证码");
-                $(this).css("border","1px solid #e60000")
-            }
         }else {
-            $(this).unbind("blur");
-            $(this).parent().find('.reg_span').html("请填写验证码");
-            $(this).css("border","1px solid #e60000")
+            $(this).next().html('')
         }
-    });
-    //登录
-    $("#submit").click(function(){
-        if ($('#password').attr('flag') == "true" && $('#text').attr('flag') == "true"){
-            if ($.cookie("user")){
-                var arr = JSON.parse($.cookie("user"));
-                for(var i=0;i<arr.length;i++){
-                    if ($('#username').val() == arr[i].username && $('#password').val() == arr[i].password){
-                        location.href = "index.html?username="+$('#username').val();
-                        $('#username').blur(function(){
-                            $(this).css("border","1px solid #dadada")
-                        });
-                        $('#username').parent().find(".reg_span").html("");
-                    }else {
-                        $('#username').unbind("blur");
-                        $('#username').parent().find(".reg_span").html("用户名或密码错误！");
-                        $('#username').css("border","1px solid #e60000")
-                    }
-                }
-            }else{
-                alert("无用户")
-            }
+    })
+
+    $('#text').blur(function () {
+        if($(this).val() == ''){
+            $('#v_span').html('验证码不能为空')
+            $("#text").attr("flag","false");
+        }else{
+            $('#v_span').html('')
+            $("#text").attr("flag","true");
+        }
+    })
+
+    $('#true').click(function () {
+        if($(this).hasClass('show')){
+            $(this).removeClass('show')
+            $(this).attr('flag','flase')
+            localStorage.setItem('username','')
+            localStorage.setItem('password','')
+            localStorage.setItem('true','')
+
         }else {
-            if ($('#password').val()){
-                var regEx  = /^.{6,20}$/g;
-                if ($('#password').val()){
-                    if (regEx.test($('#password').val())){
-                        $('#password').blur(function(){
-                            $('#password').css("border","1px solid #dadada")
-                        });
-                        $(this).parent().find('.reg_span').html("");
-                        $('#password').attr("flag","true")
-                    }else {
-                        $('#password').unbind("blur");
-                        $('#password').parent().find('.reg_span').html("请确认您输入的密码，密码为6-20位字符。");
-                        $('#password').css("border","1px solid #e60000")
-                    }
-                }
-            }else {
-                $('#password').unbind("blur");
-                $('#password').parent().find('.reg_span').html("请输入您的密码");
-                $('#password').css("border","1px solid #e60000")
-            }
-            if ($('#text').val()){
-                if ($('#text').val() == $('.text_input_span').html()){
-                    $('#text').blur(function(){
-                        $('#text').css("border","1px solid #dadada")
-                    });
-                    $('#text').parent().find('.reg_span').html("");
-                    $("#text").attr("flag","true");
-                }else {
-                    $('#text').unbind("blur");
-                    $('#text').parent().find('.reg_span').html("请填写正确的验证码");
-                    $('#text').css("border","1px solid #e60000")
-                }
-            }else {
-                $('#text').unbind("blur");
-                $('#text').parent().find('.reg_span').html("请填写验证码");
-                $('#text').css("border","1px solid #e60000")
-            }
+            $(this).addClass('show')
+            $(this).attr('flag','true')
+            $('#x_span').html('')
+            localStorage.setItem('username',$('#username').val())
+            localStorage.setItem('password',$('#password').val())
+            localStorage.setItem('true','1')
         }
-        return false
+    })
+
+    $('#submit').click(function () {
+        request_data = {
+            'verifycode':$('#text').val()
+        }
+
+        $.get('/checkverifycode/',request_data,function (response) {
+            if(response.status == 1){
+                var isregister = true
+
+                $('form input').each(function () {
+                    if($(this).attr('flag') == 'flase'){
+                        isregister = false
+                    }
+
+                    if(isregister){
+                        if($('#true').attr('flag') == 'true'){
+                            $.cookie('username','')
+                            $.cookie('password','')
+                            $('form').submit()
+                        }
+                    }
+                })
+            }else {
+                $('#v_span').html(response.msg)
+            }
+        })
     })
 });
 

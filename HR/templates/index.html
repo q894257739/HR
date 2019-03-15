@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/index_css.css' %}">
     <link rel="stylesheet" href="{% static 'css/iconfont.css' %}">
-    <link rel="stylesheet" href="{% static 'css/iconfont.woff' %}">
+{#    <link rel="stylesheet" href="{% static 'css/iconfont.woff' %}">#}
 
     <script src="{% static 'js/swiper.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery-1.12.0.js' %}"></script>
@@ -20,13 +20,20 @@
 <div class="head">
     <div class="head_center">
         <div class="headLogin">
-            <span id="user">您好</span> , 欢迎来<span id="headLogin_name">e万家</span> !
+            <span id="user">您好&nbsp;<font color="red">{{ user.username }}</font></span> , 欢迎来<span id="headLogin_name">e万家</span> !
         </div>
+
         <div class="head_nav">
             <ul class="head_nav_ul">
-                <li><a href="login.html">登录</a></li>
-                <li class="line">|</li>
-                <li><a href="register.html" class="reg">注册</a></li>
+                {% if user %}
+                    <li class="line">|</li>
+                    <li><a href="{% url 'app:logout' %}">退出登录</a></li>
+                    <li class="line">|</li>
+                {% else %}
+                    <li><a href="{% url 'app:login' %}">登录</a></li>
+                    <li class="line">|</li>
+                    <li><a href="{% url 'app:register' %}" class="reg">注册</a></li>
+                {% endif %}
                 <li><a href="">我的优惠券</a></li>
                 <li class="line">|</li>
                 <li><a href="">我的订单</a></li>
@@ -46,6 +53,8 @@
                 <li class="line">|</li>
             </ul>
         </div>
+
+
         <div class="head_r_nav">
             <ul class="head_nav_ul">
                 <li><a href="">在线客服</a></li>
@@ -767,6 +776,7 @@
         <!--<li></li>-->
     </ul>
 </div>
+
 <div class="center_body">
     <div class="center_body_now">
         <div class="tittle_list">
@@ -815,6 +825,7 @@
             </ul>
         </div>
     </div>
+    
     <div class="shop_top">
         <div class="shop_top_head">
             <div class="shop_top_head_l">
@@ -823,6 +834,7 @@
         </div>
         <div class="shop_top_body">
             <ul class="shop_top_body_ul">
+                
                 <!--<li>-->
                 <!--<div class="mask">-->
                 <!--<a href="" class="shop_top_body_ul_a">-->
@@ -851,9 +863,20 @@
                 <!--</div>-->
                 <!--</div>-->
                 <!--</li>-->
+                
+                {% for goods in goods_list %}
+                    <li style="width: 218px;height: 218px;">
+                    <a href="{% url 'app:goodsInfo' goods.id %}">
+                        <img src="{{ goods.src }}">
+                    </a>
+                </li>
+                {% endfor %}
+
             </ul>
         </div>
     </div>
+    
+    
     <div class="shop_new">
         <div class="shop_new_top">
             <div class="shop_new_top_l">
@@ -1070,6 +1093,8 @@
         </div>
     </div>
 </div>
+
+
 <div class="foot">
     <div class="foot_top">
         <ul>

@@ -1,31 +1,122 @@
-from django.http import JsonResponse
-from django.shortcuts import render
+import hashlib
+import random
 
-from app.models import Nav, User
+import os,io
 
+import time
+from django.core.cache import cache
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
+
+from app.models import Nav, User, Goods
+from PIL import Image,ImageDraw,ImageFont
 
 def index(request):
-
     imgs = Nav.objects.all()
-    print(imgs)
-    print(imgs.first().img)
-    return render(request,'index.html',context={'imgs':imgs})
+
+    goods_list = Goods.objects.all()
+
+    token = request.session.get('token')
+    userid = cache.get(token)
+    if userid:
+        user = User.objects.get(pk=userid)
+
+        response_data = {
+            'imgs': imgs,
+            'goods_list':goods_list,
+            'user': user
+        }
+    else:
+        response_data = {
+            'imgs': imgs,
+            'goods_list':goods_list,
+            'user':None
+        }
+
+    return render(request,'index.html',context=response_data)
 
 
 def goodcart(request):
     return render(request,'goodcart.html')
 
 
-def goodsInfo(request):
-    return render(request,'goodsInfo.html')
+def goodsInfo(request,goods_id):
+    goods = Goods.objects.get(pk=goods_id)
+
+    response_data = {
+        'goods':goods
+    }
+
+    return render(request,'goodsInfo.html',context=response_data)
 
 
 def login(request):
-    return render(request,'login.html')
+    if request.method == "GET":
+        return render(request, 'login.html')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        users = User.objects.filter(username=username)
+        if users.exists():
+            user = users.first()
+            if user.password == generate_password(password):
+                token = generate_token()
+                cache.set(token,user.id,60*60*24*3)
+                request.session['token'] = token
+
+                return redirect('app:index')
+            else:
+                response_data = {
+                    'msg':'密码不正确'
+                }
+                return render(request,'login.html',context=response_data)
+        else:
+            response_data = {
+                'err':'用户名不存在'
+            }
+
+
+
+    return render(request,'login.html',context=response_data)
+
+
+def generate_password(password):
+    md5 = hashlib.md5()
+    md5.update(password.encode('utf-8'))
+    return md5.hexdigest()
+
+
+def generate_token():
+    temp = str(time.time()) + str(random.random())
+    md5 = hashlib.md5()
+    md5.update(temp.encode('utf-8'))
+    return md5.hexdigest()
+
 
 
 def register(request):
-    return render(request,'register.html')
+    if request.method == 'GET':
+        return render(request, 'register.html')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        phonenum = request.POST.get('phonenum')
+        p_code = request.POST.get('p_code')
+
+        user = User()
+        user.username = username
+        user.password = generate_password(password)
+        user.phonetnum = phonenum
+        user.p_code = p_code
+        user.save()
+
+        token = generate_token()
+        cache.set(token, user.id, 60 * 60 * 24 * 3)
+        request.session['token'] = token
+        return redirect('app:index')
+
+
 
 
 def checkusername(request):
@@ -45,3 +136,75 @@ def checkusername(request):
         }
 
     return JsonResponse(response_dir)
+
+
+def verifycode(request):
+    width = 100
+    height = 50
+
+    bg_color = (random.randrange(0,256),random.randrange(0,256),random.randrange(0,256))
+
+    image = Image.new('RGB',(width,height),bg_color)
+
+    draw = ImageDraw.Draw(image)
+
+    for i in range(0,50):
+        xy = (random.randrange(0,width),random.randrange(0,height))
+        fill = (random.randrange(0,256),random.randrange(0,256),random.randrange(0,256))
+        draw.point(xy=xy,fill=fill)
+
+    temp = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'
+
+    str = ''
+
+    for i in range(0,4):
+        str += temp[random.randrange(0,len(temp))]
+
+    from HR.settings import BASE_DIR
+    font = ImageFont.truetype(os.path.join(BASE_DIR,'static/fonts/GEORGIA.TTF'),30)
+
+    font_color1 = (random.randrange(0,256),random.randrange(0,256),random.randrange(0,256))
+    font_color2 = (random.randrange(0,256),random.randrange(0,256),random.randrange(0,256))
+    font_color3 = (random.randrange(0,256),random.randrange(0,256),random.randrange(0,256))
+    font_color4 = (random.randrange(0,256),random.randrange(0,256),random.randrange(0,256))
+
+    draw.text((10,10),str[0],font_color1,font=font)
+    draw.text((35,10),str[1],font_color2,font=font)
+    draw.text((50,10),str[2],font_color3,font=font)
+    draw.text((75,10),str[3],font_color4,font=font)
+
+    del draw
+
+    buff = io.BytesIO()
+    image.save(buff,'png')
+
+    request.session['verify'] = str
+
+    return HttpResponse(buff.getvalue(),'image/png')
+
+
+def protocol(request):
+    return render(request,'protocol.html')
+
+
+def checkverifycode(request):
+    code1 = request.session.get('verify').upper()
+    code2 = request.GET.get('verifycode').upper()
+
+    if code1 == code2:
+        response_dir = {
+            'msg': '验证通过',
+            'status': 1
+        }
+    else:
+        response_dir = {
+            'msg': '验证码有误，请重新输入',
+            'status':-1
+        }
+
+    return JsonResponse(response_dir)
+
+
+def logout(request):
+    request.session.flush()
+    return redirect('app:index')

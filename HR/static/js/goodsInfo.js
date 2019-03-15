@@ -2,46 +2,6 @@
  * Created by Administrator on 2016/10/9.
  */
 $(function(){
-    //获取id,type
-    var str = location.search.replace("?","");
-    str = str.split("&");
-    var ids = str[0];
-    var types = str[1];
-
-  //动态创建
-    $.getJSON('../json/'+types+'.json',function(data){
-        for (var i=0;i<data.length;i++){
-            var obj = data[i];
-            var id = obj.id;
-            if(ids == obj.id){
-                var smallimg1 = obj.smallimg1;
-                var smallimg2 = obj.smallimg2;
-                var smallimg3 = obj.smallimg3;
-                var smallimg4 = obj.smallimg4;
-                var smallimg5 = obj.smallimg5;
-                var name = obj.name;
-                var e_name = obj.e_name;
-                var intro = obj.intro;
-                var price = obj.price;
-                var del = obj.del;
-                var bigimg = obj.bigimg;
-                $('.good_img').find('img').attr("src",smallimg1.split("_")[0]+"_420x420."+smallimg1.split("_")[1].split(".")[1]);
-                $('.bigimg').find('img').attr("src",smallimg1.split("_")[0]+"_800x800."+smallimg1.split("_")[1].split(".")[1]);
-                $('.toCar').attr('id',id);
-                $('.toCar').attr('type',types);
-                $('.imgMenu').find('img').eq(0).attr("src",smallimg1);
-                $('.imgMenu').find('img').eq(1).attr("src",smallimg2);
-                $('.imgMenu').find('img').eq(2).attr("src",smallimg3);
-                $('.imgMenu').find('img').eq(3).attr("src",smallimg4);
-                $('.imgMenu').find('img').eq(4).attr("src",smallimg5);
-                $('.info_right').find(".name").eq(0).html(name);
-                $('.info_right').find(".name").eq(1).html(e_name);
-                $('.info_right').find(".introduce").eq(1).html(intro);
-                $('.info_right').find(".textPrimary").find("strong").html(price);
-                $('.meg_div_0').find('img').attr('src',bigimg)
-            }
-        }
-    });
 
     //列表菜单
     var listBtn = $(".head_body_nav_list_ul").find("li");
@@ -216,40 +176,6 @@ $(function(){
         var val = $('.quantity_txt').attr('value');
         $('.quantity_txt').attr('value',parseInt(val)+1);
     });
-
-    // 加入购物车
-    $('.toCar').click(function(){
-        var carts = $.cookie('cart')?JSON.parse($.cookie('cart')):[];
-        var flag = false;
-        var id = $(this).attr('id');
-        var type = $(this).attr('type');
-        for(var i=0;i<carts.length;i++){
-            if(id == carts[i].id && type == carts[i].type){
-                carts[i].num = parseInt($('.quantity_txt').attr('value'))+ parseInt(carts[i].num);
-                flag = true;
-                $.cookie("cart", JSON.stringify(carts), {expires:30, path:"/"});
-            }
-        }
-        if(flag == false){
-            var good = {
-                "id":id,
-                "type":type,
-                "num":$('.quantity_txt').attr('value')
-            };
-            carts.push(good);
-            $.cookie("cart", JSON.stringify(carts), {expires:30, path:"/"});
-        }
-        num();
-        alert("已加入购物车");
-        return false
-    });
-
-    //购物车数量
-    function num(){
-        var arr = $.cookie('cart')?JSON.parse($.cookie('cart')):[];
-        $('#goodCartsNum').html(arr.length)
-    }
-    num();
 
     //购物车跳转
     $('#goodCartsNum').parent().attr('href','goodcart.html')
