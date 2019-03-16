@@ -8,8 +8,10 @@ from django.core.cache import cache
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 
-from app.models import Nav, User, Goods
+from app.models import Nav, User, Goods, Cart
 from PIL import Image,ImageDraw,ImageFont
+
+from HR.settings import BASE_DIR
 
 def index(request):
     imgs = Nav.objects.all()
@@ -37,14 +39,37 @@ def index(request):
 
 
 def goodcart(request):
-    return render(request,'goodcart.html')
+    token = request.session.get('token')
+    userid = cache.get(token)
+    user = User.objects.get(pk=userid)
+
+    carts = user.cart_set.all()
+
+    isall = True
+    for cart in carts:
+        if not cart.goods.isselect:
+            isall = False
+
+    response_data = {
+        'user':user,
+        'carts':carts,
+        'isall':isall,
+    }
+    return render(request,'goodcart.html',context=response_data)
 
 
 def goodsInfo(request,goods_id):
+    token = request.session.get('token')
+    userid = cache.get(token)
+    user = None
+    if userid:
+        user = User.objects.get(pk=userid)
+
     goods = Goods.objects.get(pk=goods_id)
 
     response_data = {
-        'goods':goods
+        'goods':goods,
+        'user':user
     }
 
     return render(request,'goodsInfo.html',context=response_data)
@@ -160,7 +185,7 @@ def verifycode(request):
     for i in range(0,4):
         str += temp[random.randrange(0,len(temp))]
 
-    from HR.settings import BASE_DIR
+
     font = ImageFont.truetype(os.path.join(BASE_DIR,'static/fonts/GEORGIA.TTF'),30)
 
     font_color1 = (random.randrange(0,256),random.randrange(0,256),random.randrange(0,256))
@@ -208,3 +233,73 @@ def checkverifycode(request):
 def logout(request):
     request.session.flush()
     return redirect('app:index')
+
+
+def addcart(request,goods_id):
+    num = request.COOKIES.get('num')
+    token = request.session.get('token')
+    userid = cache.get(token)
+    if userid:
+        user = User.objects.get(pk=userid)
+        goods = Goods.objects.get(pk=goods_id)
+        carts = Cart.objects.filter(user=user).filter(goods=goods)
+        if carts.exists():
+            cart = carts.first()
+            cart.number += int(num)
+            cart.save()
+
+        else:
+            cart = Cart()
+            cart.user = user
+            cart.goods = goods
+            cart.number = num
+            cart.save()
+
+        return redirect('app:goodcart')
+
+    else:
+        return render(request,'no_login.html')
+
+
+def no_login(request):
+    return render(request,'no_login.html')
+
+
+def changeselect(request):
+    goods_id = request.GET.get('goods_id')
+    goods = Goods.objects.get(pk=goods_id)
+    goods.isselect = not goods.isselect
+    goods.save()
+
+    response_data = {
+        'msg':'选中状态修改成功',
+        'status':1,
+        'isselect':goods.isselect
+    }
+
+    return JsonResponse(response_data)
+
+
+def changeall(request):
+
+    isall = request.GET.get('isall')
+    print(isall)
+    token = request.session.get('token')
+    userid = cache.get(token)
+    user = User.objects.get(pk=userid)
+
+    carts = user.cart_set.all()
+
+    if isall == 'true':
+        isall = True
+    elif isall == 'false':
+        isall = False
+    for cart in carts:
+        cart.goods.isselect =  isall
+        cart.goods.save()
+
+    response_data = {
+        'msg':'全选状态修改成功',
+        'status':1,
+    }
+    return JsonResponse(response_data)

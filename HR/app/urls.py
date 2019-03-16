@@ -19,4 +19,12 @@ urlpatterns = [
 
     url(r'^logout/$', views.logout, name='logout'),
 
+    url(r'^addcart/(\d+)/$',views.addcart,name='addcart'),
+
+    url('^no_login/$',views.no_login,name='no_login'),
+
+    url('^changeselect/$',views.changeselect,name='changeselect'),
+
+    url(r'^changeall/$',views.changeall,name='changeall'),
+
 ]

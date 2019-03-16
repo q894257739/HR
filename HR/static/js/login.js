@@ -6,12 +6,17 @@ $(function(){
     $('#update_code').click(function () {
         $.cookie('username',$('#username').val())
         $.cookie('password',$('#password').val())
+        localStorage.setItem('username',$('#username').val())
+        localStorage.setItem('password',$('#password').val())
     })
 
     $('#username').val(localStorage.getItem('username'))
     $('#password').val(localStorage.getItem('password'))
 
-    console.log(localStorage.getItem('true'))
+    $('#password').blur(function () {
+        $('#pass_span').html('')
+    })
+
     if (localStorage.getItem('true') == '1'){
         $('#true').addClass('show')
         $('#true').attr('flag','true')
@@ -28,6 +33,7 @@ $(function(){
             $(this).css("border","1px solid #e60000")
         }else {
             $(this).next().html('')
+            $(this).css("border","1px solid #dadada")
         }
     })
 
@@ -44,14 +50,12 @@ $(function(){
     $('#true').click(function () {
         if($(this).hasClass('show')){
             $(this).removeClass('show')
-            $(this).attr('flag','flase')
             localStorage.setItem('username','')
             localStorage.setItem('password','')
             localStorage.setItem('true','')
 
         }else {
             $(this).addClass('show')
-            $(this).attr('flag','true')
             $('#x_span').html('')
             localStorage.setItem('username',$('#username').val())
             localStorage.setItem('password',$('#password').val())
@@ -74,11 +78,13 @@ $(function(){
                     }
 
                     if(isregister){
-                        if($('#true').attr('flag') == 'true'){
                             $.cookie('username','')
                             $.cookie('password','')
-                            $('form').submit()
+                        if(!$('#true').hasClass('show')){
+                                localStorage.setItem('username','')
+                                localStorage.setItem('password','')
                         }
+                            $('form').submit()
                     }
                 })
             }else {

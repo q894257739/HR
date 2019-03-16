@@ -684,7 +684,7 @@ a{
     height: 15px;
     font-size: 0;
     margin-right: 6px;
-    background: url("/static/images/50473.png") no-repeat;
+    background: url(/static/images/50473.png) no-repeat;
     -webkit-transition: all .24s;
     -moz-transition: all .24s;
     -ms-transition: all .24s;
@@ -876,4 +876,14 @@ table {
 }
 .modelTable .desc {
     padding-left: 25px;
+}
+
+#select{
+    display: block;
+    width: 202px;
+    height: 32px;
+}
+
+.show{
+    background: url(/static/images/timg.jpg) no-repeat;
 }

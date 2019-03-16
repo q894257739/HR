@@ -2,7 +2,7 @@
  * Created by Administrator on 2016/10/9.
  */
 $(function(){
-
+    $.cookie('num')
     //列表菜单
     var listBtn = $(".head_body_nav_list_ul").find("li");
     for(var i=2;i<listBtn.length;i++){
@@ -180,4 +180,22 @@ $(function(){
     //购物车跳转
     $('#goodCartsNum').parent().attr('href','goodcart.html')
 
+
+    $('.like').click(function () {
+        $(this).children(':first').css("background-image","");
+    })
+
+    $('.toCar').click(function () {
+        $.cookie('num',$('.quantity_txt').val(),{expires:3,path:'/'})
+    })
+
+    $('.less').click(function () {
+        $.cookie('num',$('.quantity_txt').val(),{expires:3,path:'/'})
+    })
+
+    $('.add').click(function () {
+        $.cookie('num',$('.quantity_txt').val(),{expires:3,path:'/'})
+    })
+
 });
+

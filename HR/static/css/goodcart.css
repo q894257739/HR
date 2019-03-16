@@ -13,7 +13,7 @@ li{
     list-style: none;
 }
 .header{
-    background: url(../images/50393.png) repeat-x;
+    background: url(/static/images/50393.png) repeat-x;
     height: 124px;
     box-shadow: 0 0 10px rgba(9, 2, 4, .12);
     position: relative;
@@ -74,7 +74,7 @@ li{
     float: left;
     white-space: nowrap;
     padding-right: 15px;
-    background: url(../images/50420.png) no-repeat right center;
+    background: url(/static/images/50420.png) no-repeat right center;
 }
 .headerBody {
     display: inline-block;
@@ -87,7 +87,7 @@ li{
 .headerLogo {
     width: 341px;
     height: 71px;
-    background-image: url('../images/4312385.png');
+    background-image: url('/static/images/4312385.png');
     float: left;
 }
 .headerShoppingStep {
@@ -108,11 +108,11 @@ li{
     white-space: nowrap;
     position: relative;
 }
-.headerShoppingStep > li.active .line{
+.headerShoppingStep > li.show .line{
     background-color: #79b235;
 }
-.headerShoppingStep > li.active .radius{
-    background: url(../images/50461.png) no-repeat 0 0;
+.headerShoppingStep > li.show .radius{
+    background: url(/static/images/50461.png) no-repeat 0 0;
 }
 .headerShoppingStep > li > .line{
     position: absolute;
@@ -128,7 +128,7 @@ li{
     top: -14px;
     left: 50%;
     margin-left: -14px;
-    background: url(../images/50461.png) no-repeat 0 -28px;
+    background: url(/static/images/50461.png) no-repeat 0 -28px;
     color: #fff;
     font-size: 15px;
     text-align: center;
@@ -217,7 +217,7 @@ li{
     float: left;
     margin-left: 25px;
     font-size: 16px;
-    color: #fb000a;
+    color: black;
     font-weight: bold;
 }
 .th {
@@ -294,8 +294,8 @@ li{
     box-sizing: border-box;
     position: absolute;
 }
-.checkbox.active i{
-    background: url("../images/50377.png") no-repeat center center;
+.checkbox.show i{
+    /*background: url("/static/images/50377.png") no-repeat center center;*/
 }
 .ll {
     width: 100%;
@@ -303,7 +303,7 @@ li{
     background-color: #fff;
     border-bottom: 1px dashed #e4e4e4;
 }
-.ll .active {
+.ll .show {
     background-color: #fff9f9;
 }
 .ll li{
@@ -390,7 +390,7 @@ li{
     line-height: 19px;
 }
 .ll .ld6 .less {
-    background: url("../images/50416.png") no-repeat center center;
+    background: url("/static/images/50416.png") no-repeat center center;
     cursor: pointer;
     float: left;
     height: 30px;
@@ -505,4 +505,47 @@ li{
 }
 .float_l p a:hover{
     color: #e60000;
+}
+
+#has{
+    position: relative;
+}
+
+#true{
+    position: absolute;
+    left: 50px;
+}
+
+#good_img{
+    position: absolute;
+    left: 250px;
+    top: 0px;
+}
+
+#top_food{
+    position: absolute;
+    left: 490px;
+    top: 0px;
+}
+
+#top_price{
+    position: absolute;
+    left: 660px;
+    top: 0px;
+}
+
+#top_num{
+    position: absolute;
+    left: 800px;
+    top: 0px;
+}
+
+#top_total{
+    position: absolute;
+    left: 930px;
+    top: 0px;
+}
+
+.ctl{
+    background: url("/static/images/50377.png") no-repeat center center;
 }

@@ -45,7 +45,7 @@
                 <p>
                     <label>密码：</label>
                     <input type="password" placeholder="请输入您的密码" class="input" id="password" flag="false" name="password">
-                    <span class="reg_span"></span>
+                    <span class="reg_span" id="pass_span">{{ msg }}</span>
                 </p>
                 <p>
                     <label>验证码：</label>
@@ -57,7 +57,7 @@
                 <p class="checkbox_p">
                         <span class="checkbox">
                             <input type="hidden" value="false">
-                            <i id="true"></i>
+                            <i id="true" flag="true"></i>
                         </span>
                     记住密码
                     <a href="">忘记密码</a>

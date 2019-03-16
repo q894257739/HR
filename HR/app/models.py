@@ -22,7 +22,7 @@ class Goods(models.Model):
     name = models.CharField(max_length=256)
     intro = models.CharField(max_length=200)
     price = models.IntegerField()
-    isdelete = models.CharField(max_length=20,default='')
+    isdelete = models.CharField(max_length=20,default=0)
     smallimg1 = models.CharField(max_length=200)
     smallimg2 = models.CharField(max_length=200)
     smallimg3 = models.CharField(max_length=200)
@@ -31,10 +31,28 @@ class Goods(models.Model):
     e_name = models.CharField(max_length=100,default='')
     bigimg = models.CharField(max_length=200)
     repertory = models.IntegerField(default=100)
+    specification = models.CharField(max_length=40,default='尖品推荐')
+    isselect = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'hr_goods'
 
+class Cart(models.Model):
+    user = models.ForeignKey(User)
+    goods = models.ForeignKey(Goods)
+    number = models.IntegerField()
+
+    iscollections = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'hr_cart'
+
+class Collections(models.Model):
+    user = models.ForeignKey(User)
+    goods = models.ForeignKey(Goods)
+
+    class Meta:
+        db_table= 'hr_collections'
 
 
 
