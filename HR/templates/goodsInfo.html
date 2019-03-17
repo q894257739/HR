@@ -36,9 +36,9 @@
                         <li><a href="{% url 'app:register' %}" class="reg">注册</a></li>
                     {% endif %}
                     <li class="line">|</li>
-                    <li><a href="">我的优惠券</a></li>
+                    <li><a href="{% url 'app:goodcart' %}">我的购物车</a></li>
                     <li class="line">|</li>
-                    <li><a href="">我的订单</a></li>
+                    <li><a href="{% url 'app:orderlist' %}">我的订单</a></li>
                     <li class="line">|</li>
                     <li class="head_nav_phone_li">
                         <img src="{% static 'images/14840063.png' %}" alt="">
@@ -734,7 +734,7 @@
                 </div>
                 <div class="info_right">
                     <span class="name">{{ goods.name }}</span>
-                    <span class="name">{{ goods.e_name }}</span>
+                    <span class="name" style="color: red">{{ goods.e_name }}</span>
                     <span class="introduce">
                         <div style="margin-right: 12px; float: left">
                             <img src="{% static 'images/France.png' %}" style="width: 20px;height: 20px;">

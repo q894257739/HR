@@ -11,6 +11,7 @@ class User(models.Model):
     password = models.CharField(max_length=256)
     phonetnum = models.CharField(max_length=20)
     p_code = models.CharField(max_length=20,default='None')
+    addr = models.CharField(max_length=200,default='大学城创客小镇')
 
 
     class Meta:
@@ -51,10 +52,25 @@ class Collections(models.Model):
     user = models.ForeignKey(User)
     goods = models.ForeignKey(Goods)
 
+
     class Meta:
         db_table= 'hr_collections'
 
 
+class Order(models.Model):
+    user = models.ForeignKey(User)
+    createtime = models.DateTimeField(auto_now_add=True)
+    updatetime= models.DateTimeField(auto_now=True)
+    status = models.IntegerField(default=0)
+    identifier = models.CharField(max_length=256)
 
+    class Meta:
+        db_table = 'hr_order'
 
+class OrderGoods(models.Model):
+    order = models.ForeignKey(Order)
+    goods = models.ForeignKey(Goods)
+    number = models.IntegerField()
 
+    class Meta:
+        db_table = 'hr_ordergoods'

@@ -27,4 +27,11 @@ urlpatterns = [
 
     url(r'^changeall/$',views.changeall,name='changeall'),
 
+    url(r'^delall/$',views.delall,name='delall'),
+
+    url(r'^delone/$',views.delone,name='delone'),
+
+    url(r'^orderdetail/$',views.orderdetail,name='orderdetail'),
+
+    url(r'^orderlist/$',views.orderlist,name='orderlist'),
 ]

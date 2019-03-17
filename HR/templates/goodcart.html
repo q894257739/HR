@@ -37,7 +37,7 @@
             </div>
             <div class="siteNavEntry">
                 <a href="">收藏夹</a>
-                <a href="">我的订单</a>
+                <a href="{% url 'app:orderlist' %}">我的订单</a>
             </div>
         </div>
         <div class="headerBody">
@@ -65,11 +65,13 @@
 <div class="backededed">
     <div class="mani_cat_but">
         <span class="title">购物车</span>
-        <a class="but" href="{% url 'app:index' %}">继续购物 &gt;</a>
+        <a class="but" style="color: indigo" href="{% url 'app:index' %}">继续购物 &gt;</a>
     </div>
     <div class="datles_table">
         <div class="delivery">
-            <span class="totalAmount">全部商品共<span><font color="red">&nbsp;{{ carts.count }}&nbsp;</font></span>件</span>
+            <span class="totalAmount">全部商品共&nbsp;<span><span style="color: red;"
+                                                             class="all_goods">{{ carts.count }}</span></span>&nbsp;件</span>
+            <span style="color: red;" class="del_msg">&nbsp;清空购物车成功!</span>
         </div>
     </div>
     <div class="th">
@@ -101,18 +103,19 @@
                 <div id="has">
                     <div class="checkbox">
                         {% if cart.goods.isselect %}
-                            <i id="true" class="ctl" flag="false" goods_id="{{ cart.goods.id }}"></i>
+                            <i id="true" class="found have_this" flag="false" goods_id="{{ cart.goods.id }}"></i>
                         {% else %}
                             <i id="true" flag="false" goods_id="{{ cart.goods.id }}"></i>
                         {% endif %}
                     </div>
                     <span class="merchantName">
-                    <img src="{{ cart.goods.smallimg1 }}" id="good_img">
-                </span>
+                        <img src="{{ cart.goods.smallimg1 }}" id="good_img">
+                    </span>
                     <span id="top_food">{{ cart.goods.specification }}</span>
                     <span id="top_price" data-price="{{ cart.goods.price }}">{{ cart.goods.price }}</span>
                     <span id="top_num" data-num="{{ cart.number }}">{{ cart.number }}</span>
                     <span id="top_total"></span>
+                    <button class="top_del" style="color: indigo" cart_id="{{ cart.id }}">删除该商品</button>
 
                     <span class="payPrice">
                     <span></span>
@@ -162,18 +165,16 @@
         <div class="float_l" all="{{ isall|lower }}">
             <div class="checkbox enableSelect show">
                 {% if isall %}
-                    <i class="ctl"></i>
+                    <i class="found_all"></i>
                 {% else %}
                     <i></i>
                 {% endif %}
             </div>
             <span class="f14" style="margin-right: 36px;">全选</span>
-            <span class="bd">已经选中<b class="selectNumber fb000a f18">0</b>件商品</span>
-            <span class="bd2">总重量<b data-bind="text:checkedTotalWeight">0.00</b>kg</span>
-            <p>
-                <a href="" id="delAll">清空购物车</a>
-                <!--<a href="" id="dels">删除</a>-->
-            </p>
+            <span class="bd">已经选中&nbsp;<b id="now_num" class="selectNumber fb000a f18">0</b>&nbsp;件商品</span>
+            {#            <span class="bd2">总重量<b data-bind="text:checkedTotalWeight">0.00</b>kg</span>#}
+            <button id="delall" style="color: indigo">清空购物车</button>
+            <!--<a href="" id="dels">删除</a>-->
         </div>
         <div class="float_r">
             <div class="quantity">
@@ -182,7 +183,7 @@
                     ¥<em class="price fb000a f18" id="count_num"></em>
                 </p>
             </div>
-            <a class="pay">结算</a>
+            <a class="pay" href="{% url 'app:orderdetail' %}">结算</a>
         </div>
     </div>
 </div>

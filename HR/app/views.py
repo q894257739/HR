@@ -8,7 +8,7 @@ from django.core.cache import cache
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 
-from app.models import Nav, User, Goods, Cart
+from app.models import Nav, User, Goods, Cart, Order, OrderGoods
 from PIL import Image,ImageDraw,ImageFont
 
 from HR.settings import BASE_DIR
@@ -41,21 +41,25 @@ def index(request):
 def goodcart(request):
     token = request.session.get('token')
     userid = cache.get(token)
-    user = User.objects.get(pk=userid)
+    if userid:
+        user = User.objects.get(pk=userid)
 
-    carts = user.cart_set.all()
+        carts = user.cart_set.all()
 
-    isall = True
-    for cart in carts:
-        if not cart.goods.isselect:
-            isall = False
+        isall = True
+        for cart in carts:
+            if not cart.goods.isselect:
+                isall = False
 
-    response_data = {
-        'user':user,
-        'carts':carts,
-        'isall':isall,
-    }
-    return render(request,'goodcart.html',context=response_data)
+        response_data = {
+            'user':user,
+            'carts':carts,
+            'isall':isall,
+        }
+        return render(request, 'goodcart.html', context=response_data)
+    else:
+        return render(request,'no_login.html')
+
 
 
 def goodsInfo(request,goods_id):
@@ -303,3 +307,84 @@ def changeall(request):
         'status':1,
     }
     return JsonResponse(response_data)
+
+
+def delall(request):
+    token = request.session.get('token')
+    userid = cache.get(token)
+    user = User.objects.get(pk=userid)
+
+    carts = user.cart_set.all()
+
+    print(carts)
+
+    for cart in carts:
+        cart.delete()
+
+
+    response_data = {
+        'msg':'清空购物车成功',
+        'status':1
+    }
+    return JsonResponse(response_data)
+
+
+def delone(request):
+    cart_id = request.GET.get('cart_id')
+    cart = Cart.objects.get(pk=cart_id)
+    cart.delete()
+
+    response_data = {
+        'msg':'删除指定商品成功',
+        'status':1
+    }
+
+    return JsonResponse(response_data)
+
+
+def generate_identifier():
+    temp = str(time.time()) + str(random.randrange(10000,100000))
+    return temp.replace('.','0')
+
+
+def orderdetail(request):
+    token = request.session.get('token')
+    userid = cache.get(token)
+    user = User.objects.get(pk=userid)
+
+    order = Order()
+    order.user = user
+    order.identifier = generate_identifier()
+    order.save()
+
+    carts = user.cart_set.all()
+    for cart in carts:
+        ordergoods = OrderGoods()
+        ordergoods.order = order
+        ordergoods.goods = cart.goods
+        ordergoods.number = cart.number
+        ordergoods.save()
+        cart.delete()
+
+    response_data = {
+        'user':user,
+        'order':order,
+        'carts':carts
+    }
+
+    return render(request,'orderdetail.html',context=response_data)
+
+
+def orderlist(request):
+    token = request.session.get('token')
+    userid = cache.get(token)
+    if userid:
+        user = User.objects.get(pk=userid)
+
+        response_data = {
+            'user':user
+        }
+    else:
+        return render(request,'no_login.html')
+
+    return render(request,'orderlist.html',context=response_data)

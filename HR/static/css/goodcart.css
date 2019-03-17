@@ -546,6 +546,23 @@ li{
     top: 0px;
 }
 
-.ctl{
+.top_del{
+    position: absolute;
+    left: 1030px;
+    top: 30px;
+}
+
+.found{
     background: url("/static/images/50377.png") no-repeat center center;
 }
+
+.del_msg{
+    display: none;
+}
+
+.found_all{
+    background: url("/static/images/50377.png") no-repeat center center;
+}
+
+
+
