@@ -4,10 +4,14 @@ import random
 import os,io
 
 import time
+from urllib.parse import parse_qs
+
 from django.core.cache import cache
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 
+from app.alipay import AliPay, alipay
 from app.models import Nav, User, Goods, Cart, Order, OrderGoods
 from PIL import Image,ImageDraw,ImageFont
 
@@ -380,9 +384,10 @@ def orderlist(request):
     userid = cache.get(token)
     if userid:
         user = User.objects.get(pk=userid)
-
+        orders = user.order_set.all()
         response_data = {
-            'user':user
+            'user':user,
+            'orders':orders,
         }
     else:
         return render(request,'no_login.html')
@@ -405,3 +410,61 @@ def orderdetail(request):
     }
 
     return render(request, 'orderdetail.html', context=response_data)
+
+@csrf_exempt
+def notifyurl(request):
+    if request.method == "POST":
+        body_str = request.body.decode('utf-8')
+
+        post_data = parse_qs(body_str)
+
+
+        post_dic = {}
+        for k,v in post_data.items():
+            post_dic[k] = v[0]
+
+        out_trade_no = post_dic['out_trade_no']
+
+        order = Order.objects.get(identifier=out_trade_no)
+
+        order.status = 1
+        order.save()
+
+
+    return JsonResponse({'msg':'susses'})
+
+
+def returnurl(request):
+    return render(request,'returnurl.html')
+
+
+def pay(request):
+    identifier = request.GET.get('identifier')
+    order = Order.objects.get(identifier=identifier)
+
+    sum = 0
+    for ordergoods in order.ordergoods_set.all():
+        sum += ordergoods.goods.price * ordergoods.number
+
+    data = alipay.direct_pay(
+        subject='华润支付',
+        out_trade_no=order.identifier,
+        total_amount=str(sum),
+        return_url="http://47.107.153.198/returnurl/"
+    )
+
+    alipayurl = 'https://openapi.alipaydev.com/gateway.do?{data}'.format(data=data)
+
+    response_data = {
+        'msg':'调用支付接口',
+        'status':1,
+        'alipayurl':alipayurl,
+    }
+
+    return JsonResponse(response_data)
+
+
+def checkorder(request,identifier):
+
+
+    return render(request,'index.html')

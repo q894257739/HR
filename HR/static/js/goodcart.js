@@ -109,7 +109,7 @@ $(function () {
         $('#now_num').text(num)
     }
 
-    $('.pay').click(function () {
+    $('#only_pay').click(function () {
         $.get('/generateorder/', function (response) {
             if (response.status == 1) {
                 window.open('/orderdetail/', '_self')

@@ -36,4 +36,12 @@ urlpatterns = [
     url(r'^orderdetail/$',views.orderdetail,name='orderdetail'),
 
     url(r'^orderlist/$',views.orderlist,name='orderlist'),
+
+    url(r'^notifyurl/$',views.notifyurl,name='notifyurl'),
+
+    url(r'^returnurl/$',views.returnurl,name='returnurl'),
+
+    url(r'^pay/$',views.pay,name='pay'),
+
+    url(r'^checkorder/(\d+)/$',views.checkorder,name='checkorder'),
 ]
