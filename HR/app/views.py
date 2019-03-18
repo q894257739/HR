@@ -347,7 +347,7 @@ def generate_identifier():
     return temp.replace('.','0')
 
 
-def orderdetail(request):
+def generateorder(request):
     token = request.session.get('token')
     userid = cache.get(token)
     user = User.objects.get(pk=userid)
@@ -359,20 +359,20 @@ def orderdetail(request):
 
     carts = user.cart_set.all()
     for cart in carts:
-        ordergoods = OrderGoods()
-        ordergoods.order = order
-        ordergoods.goods = cart.goods
-        ordergoods.number = cart.number
-        ordergoods.save()
-        cart.delete()
+        if cart.goods.isselect:
+            ordergoods = OrderGoods()
+            ordergoods.order = order
+            ordergoods.goods = cart.goods
+            ordergoods.number = cart.number
+            ordergoods.save()
+            cart.delete()
 
     response_data = {
-        'user':user,
-        'order':order,
-        'carts':carts
+        'msg':'生成订单成功',
+        'status':1,
     }
 
-    return render(request,'orderdetail.html',context=response_data)
+    return JsonResponse(response_data)
 
 
 def orderlist(request):
@@ -388,3 +388,20 @@ def orderlist(request):
         return render(request,'no_login.html')
 
     return render(request,'orderlist.html',context=response_data)
+
+
+def orderdetail(request):
+    token = request.session.get('token')
+    userid = cache.get(token)
+    user = User.objects.get(pk=userid)
+    order = user.order_set.all().first()
+    carts = order.ordergoods_set.all()
+
+
+    response_data = {
+        'user': user,
+        'order': order,
+        'carts': carts
+    }
+
+    return render(request, 'orderdetail.html', context=response_data)

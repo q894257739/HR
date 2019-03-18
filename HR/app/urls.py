@@ -31,6 +31,8 @@ urlpatterns = [
 
     url(r'^delone/$',views.delone,name='delone'),
 
+    url(r'^generateorder/$',views.generateorder,name='generateorder'),
+
     url(r'^orderdetail/$',views.orderdetail,name='orderdetail'),
 
     url(r'^orderlist/$',views.orderlist,name='orderlist'),

@@ -21,6 +21,7 @@ $(function () {
             }
 
             choose_goodsnum()
+            total()
         })
 
     })
@@ -49,8 +50,10 @@ $(function () {
                 }
 
                 choose_goodsnum()
+                total()
             })
         })
+
     })
 
     $('#delall').click(function () {
@@ -60,6 +63,7 @@ $(function () {
                 $('.del_msg').show()
                 $('.all_goods').text(0)
                 $('#now_num').text(0)
+                total()
             }
         })
     })
@@ -74,6 +78,7 @@ $(function () {
             if (response.status == 1) {
                 $that.parent().parent().hide()
                 $('#now_num').text($('#now_num').text() - 1)
+                total()
             }
         })
     })
@@ -84,14 +89,17 @@ $(function () {
         $('.ll .merchantHeader').each(function () {
             var $prive = $(this).find('#top_price').attr('data-price')
             var $num = $(this).find('#top_num').attr('data-num')
-            
-            if($(this).hasClass('found')){
-                console.log(1)
+
+            if($(this).find('i').hasClass('found')){
                 sum = parseInt($prive) * parseInt($num)
                 count_num += sum
                 $(this).find('#top_total').html(sum)
+            }else {
+                $(this).find('#top_total').html(0)
             }
+
         })
+
         $('#count_num').html(count_num)
     }
 
@@ -101,6 +109,12 @@ $(function () {
         $('#now_num').text(num)
     }
 
+    $('.pay').click(function () {
+        $.get('/generateorder/',function (response) {
+            if (response.status == 1){
+                window.open('/orderdetail/','_self')
+            }
+        })
+    })
 
-    total()
 });

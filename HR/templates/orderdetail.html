@@ -106,7 +106,7 @@
                         <div>
                             商品一览: <select name="" id="">
                                         {% for cart in carts %}
-                                            <option value="">{{ cart.goods.e_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x{{ cart.number }}</option>
+                                                <option value="">{{ cart.goods.e_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x{{ cart.number }}</option>
                                         {% endfor %}
                                     </select>
                         </div>
@@ -123,11 +123,11 @@
             <li class="merchantHeader">
                 <div id="has">
                     <div class="checkbox">
-{#                        {% if cart.goods.isselect %}#}
-{#                            <i id="true" class="found have_this" flag="false" goods_id="{{ cart.goods.id }}"></i>#}
-{#                        {% else %}#}
-{#                            <i id="true" flag="false" goods_id="{{ cart.goods.id }}"></i>#}
-{#                        {% endif %}#}
+                        {% if cart.goods.isselect %}
+                            <i id="true" class="found have_this" flag="false" goods_id="{{ cart.goods.id }}"></i>
+                        {% else %}
+                            <i id="true" flag="false" goods_id="{{ cart.goods.id }}"></i>
+                        {% endif %}
                     </div>
                     <span class="merchantName">
                         <img src="{{ cart.goods.smallimg1 }}" id="good_img">
@@ -219,5 +219,6 @@
     </div>
 </div>
 <script type="text/javascript" src="{% static 'js/goodcart.js' %}"></script>
+
 </body>
 </html>
