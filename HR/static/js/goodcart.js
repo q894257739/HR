@@ -90,11 +90,11 @@ $(function () {
             var $prive = $(this).find('#top_price').attr('data-price')
             var $num = $(this).find('#top_num').attr('data-num')
 
-            if($(this).find('i').hasClass('found')){
+            if ($(this).find('i').hasClass('found')) {
                 sum = parseInt($prive) * parseInt($num)
                 count_num += sum
                 $(this).find('#top_total').html(sum)
-            }else {
+            } else {
                 $(this).find('#top_total').html(0)
             }
 
@@ -110,11 +110,12 @@ $(function () {
     }
 
     $('.pay').click(function () {
-        $.get('/generateorder/',function (response) {
-            if (response.status == 1){
-                window.open('/orderdetail/','_self')
+        $.get('/generateorder/', function (response) {
+            if (response.status == 1) {
+                window.open('/orderdetail/', '_self')
             }
         })
     })
+
 
 });

@@ -394,7 +394,7 @@ def orderdetail(request):
     token = request.session.get('token')
     userid = cache.get(token)
     user = User.objects.get(pk=userid)
-    order = user.order_set.all().first()
+    order = user.order_set.all().last()
     carts = order.ordergoods_set.all()
 
 

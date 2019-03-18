@@ -165,7 +165,7 @@
         <div class="float_l" all="{{ isall|lower }}">
             <div class="checkbox enableSelect show">
                 {% if isall %}
-                    <i class="found_all"></i>
+                    <i class="found_all" id="only_all"></i>
                 {% else %}
                     <i></i>
                 {% endif %}
@@ -183,7 +183,7 @@
                     ¥<em class="price fb000a f18" id="count_num"></em>
                 </p>
             </div>
-            <a class="pay" href="#">生成订单</a>
+            <a class="pay" id="only_pay" href="#">生成订单</a>
         </div>
     </div>
 </div>
