@@ -113,7 +113,13 @@
                     </span>
                     <span id="top_food">{{ cart.goods.specification }}</span>
                     <span id="top_price" data-price="{{ cart.goods.price }}">{{ cart.goods.price }}</span>
-                    <span id="top_num" data-num="{{ cart.number }}">{{ cart.number }}</span>
+                    <span id="top_num" data-num="{{ cart.number }}">
+                            <span>
+                                <a class="less" data-cartid="{{ cart.id }}"></a>
+                                <span id="this_num">{{ cart.number }}</span>
+                                <a class="add" data-cartid="{{ cart.id }}" data-cartnum="{{ cart.number }}"></a>
+                            </span>
+                    </span>
                     <span id="top_total"></span>
                     <button class="top_del" style="color: indigo" cart_id="{{ cart.id }}">删除该商品</button>
 

@@ -564,5 +564,26 @@ li{
     background: url("/static/images/50377.png") no-repeat center center;
 }
 
-
+.less{
+    width: 12px;
+    height: 30px;
+    text-align: center;
+    background: url(/static/images/50416.png) no-repeat center;
+    cursor: pointer;
+    transition: all 1s ease-out;
+    position: absolute;
+    left: -30px;
+    top: 29px;
+}
+.add{
+    width: 12px;
+    height: 30px;
+    text-align: center;
+    background: url(/static/images/50415.png) no-repeat center;
+    cursor: pointer;
+    transition: all 1s ease-out;
+    position: absolute;
+    left: 25px;
+    top: 29px;
+}
 

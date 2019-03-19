@@ -465,6 +465,42 @@ def pay(request):
 
 
 def checkorder(request,identifier):
+    order = Order.objects.get(identifier=identifier)
+    carts = order.ordergoods_set.all()
+
+    response_data = {
+        'order':order,
+        'carts':carts,
+    }
+
+    return render(request,'checkorder.html',context=response_data)
 
 
-    return render(request,'index.html')
+def addcartgoods(request):
+    cartid = request.GET.get('cartid')
+    cart = Cart.objects.get(pk=cartid)
+    cart.number = cart.number + 1
+    cart.save()
+
+    response_data = {
+        'msg':'添加商品成功',
+        'status':1,
+    }
+
+    return JsonResponse(response_data)
+
+
+def reducecartgoods(request):
+    cartid = request.GET.get('cartid')
+    cart = Cart.objects.get(pk=cartid)
+    cart.number = cart.number - 1
+    if cart.number < 1:
+        cart.number = 1
+    cart.save()
+
+    response_data = {
+        'msg':'减少商品成功',
+        'status':1,
+    }
+
+    return JsonResponse(response_data)

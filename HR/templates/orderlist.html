@@ -76,7 +76,19 @@
                         {% for order in orders %}
                             <div>
                                 <a href="{% url 'app:checkorder' order.identifier %}">
-                                    订单号:{{ order.identifier }}&nbsp;&nbsp;&nbsp; 订单状态:{{ order.status }}
+                                    订单号:{{ order.identifier }}&nbsp;&nbsp;&nbsp; <span>
+                                    订单状态: {% if order.status == 0 %}
+                                    {{ order.status }} <span style="color: black">[未付款]</span>
+                                {% elif order.status == 1 %}
+                                    {{ order.status }} <span style="color: black">[已付款,待发货]</span>
+                                {% elif order.status == 2 %}
+                                    {{ order.status }} <span style="color: black">[已发货，待收货]</span>
+                                {% elif order.status == 3 %}
+                                    {{ order.status }} <span style="color: black">[已收货，待评价]</span>
+                                {% elif order.status == 4 %}
+                                    {{ order.status }} <span style="color: black">[已评价]</span>
+                                {% endif %}
+                                </span>
                                 </a>
                             </div>
                         {% endfor %}
@@ -106,7 +118,7 @@
                     <span id="top_price" data-price="{{ cart.goods.price }}">{{ cart.goods.price }}</span>
                     <span id="top_num" data-num="{{ cart.number }}">{{ cart.number }}</span>
                     <span id="top_total"></span>
-{#                    <button class="top_del" style="color: indigo" cart_id="{{ cart.id }}">删除该商品</button>#}
+                    {#                    <button class="top_del" style="color: indigo" cart_id="{{ cart.id }}">删除该商品</button>#}
 
                     <span class="payPrice">
                     <span></span>
@@ -152,25 +164,25 @@
         <!--</div>-->
         <!--</li>-->
     </ul>
-{#    <div class="jiesuan">#}
-{#        <div class="float_l" all="{{ isall|lower }}">#}
-{#            <div class="checkbox enableSelect show">#}
-{#            </div>#}
-{#            <span class="bd">已经选中&nbsp;<b id="now_num" class="selectNumber fb000a f18">0</b>&nbsp;件商品</span>#}
-            {#            <span class="bd2">总重量<b data-bind="text:checkedTotalWeight">0.00</b>kg</span>#}
-{#            <button id="delall" style="color: indigo">清空购物车</button>#}
-{#            <!--<a href="" id="dels">删除</a>-->#}
-{#        </div>#}
-{#        <div class="float_r">#}
-{#            <div class="quantity">#}
-{#                <p>#}
-{#                    <span>合计（不含运费）：</span>#}
-{#                    ¥<em class="price fb000a f18" id="count_num"></em>#}
-{#                </p>#}
-{#            </div>#}
-{#            <a class="pay" {% url 'app:orderdetail' %}  id="alipay">确认支付</a>#}
-{#        </div>#}
-{#    </div>#}
+    {#    <div class="jiesuan">#}
+    {#        <div class="float_l" all="{{ isall|lower }}">#}
+    {#            <div class="checkbox enableSelect show">#}
+    {#            </div>#}
+    {#            <span class="bd">已经选中&nbsp;<b id="now_num" class="selectNumber fb000a f18">0</b>&nbsp;件商品</span>#}
+    {#            <span class="bd2">总重量<b data-bind="text:checkedTotalWeight">0.00</b>kg</span>#}
+    {#            <button id="delall" style="color: indigo">清空购物车</button>#}
+    {#            <!--<a href="" id="dels">删除</a>-->#}
+    {#        </div>#}
+    {#        <div class="float_r">#}
+    {#            <div class="quantity">#}
+    {#                <p>#}
+    {#                    <span>合计（不含运费）：</span>#}
+    {#                    ¥<em class="price fb000a f18" id="count_num"></em>#}
+    {#                </p>#}
+    {#            </div>#}
+    {#            <a class="pay" {% url 'app:orderdetail' %}  id="alipay">确认支付</a>#}
+    {#        </div>#}
+    {#    </div>#}
 </div>
 <div class="center">
     <div class="web_map_My">

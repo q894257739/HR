@@ -44,4 +44,8 @@ urlpatterns = [
     url(r'^pay/$',views.pay,name='pay'),
 
     url(r'^checkorder/(\d+)/$',views.checkorder,name='checkorder'),
+
+    url(r'^addcartgoods/$',views.addcartgoods,name='addcartgoods'),
+
+    url(r'^reducecartgoods/$',views.reducecartgoods,name='reducecartgoods'),
 ]

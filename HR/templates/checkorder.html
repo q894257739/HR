@@ -1,10 +1,225 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>购物车</title>
+    <link rel="stylesheet" href="{% static 'css/orderdetail.css' %}">
+    <script type="text/javascript" src="{% static 'js/jquery-1.12.0.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.cookie.js' %}"></script>
+    <script src="{% static 'js/orderdetail.js' %}"></script>
+
+
 </head>
 <body>
+<div class="header">
+    <div class="center">
+        <div class="siteNav">
+            <div class="siteNavCityChoose">
+                    <span>我在:
+                        <select name="" id="select">
+                                <option value="">深圳</option>
+                                <option value="">上海</option>
+                                <option value="">广州</option>
+                                <option value="">北京</option>
+                                <option value="">黑龙江</option>
+                                <option value="">广西</option>
+                            </select>
+                    </span>
+            </div>
+            <div class="siteNavLogin">
+                您好&nbsp;<font color="red">{{ user.username }}</font>，欢迎来e万家
+                {% if user %}
+                    <a href="{% url 'app:logout' %}">退出登录</a>
+                {% else %}
+                    <a href="{% url 'app:login' %}">登录</a><a href="{% url 'app:register' %}">注册</a>
+                {% endif %}
+            </div>
+            <div class="siteNavEntry">
+                <a href="">收藏夹</a>
+                <a href="">我的订单</a>
+            </div>
+        </div>
+        <div class="headerBody">
+            <a href="{% url 'app:index' %}" class="headerLogo"></a>
+{#            <ul class="headerShoppingStep">#}
+{#                <li>#}
+{#                    <div class="line"></div>#}
+{#                    <div class="radius">1</div>#}
+{#                    <span class="title">购物车</span>#}
+{#                </li>#}
+{#                <li class="show">#}
+{#                    <div class="line"></div>#}
+{#                    <div class="radius">2</div>#}
+{#                    <span class="title">确认订单信息</span>#}
+{#                </li>#}
+{#                <li>#}
+{#                    <div class="line"></div>#}
+{#                    <div class="radius">3</div>#}
+{#                    <span class="title">提交订单</span>#}
+{#                </li>#}
+{#            </ul>#}
+        </div>
+    </div>
+</div>
+<div class="backededed">
+    <div class="mani_cat_but">
+        <span class="title" style="color: black">订单详情&nbsp;</span>
+        <a class="but" style="color: indigo" href="{% url 'app:index' %}">继续购物 &gt;</a>
+    </div>
+    <div class="datles_table">
+        <div class="delivery" id="wrapper">
+            <span class="totalAmount">
+                <span>
+                    <span style="color: red;" class="all_goods">
+                        <div>
+                            订单发起人: <i style="color: black">{{ user.username }}</i>
+                        </div>
+                        <div>
+                            收货地址: <select name="" id="">
+                                        <option value="">{{ user.addr|default:'楼下小卖部' }}</option>
+                                        <option value="">楼下小卖部</option>
+                                        <option value="">肥妹餐厅</option>
+                                        <option value="">千峰教育</option>
+                                        <option value="">阿里云</option>
+                                    </select>
+                        </div>
+                        <div>
+                            订单号: <span identifier="{{ order.identifier }}" id="oid">{{ order.identifier }}</span>
+                        </div>
+                        <div>
+                            订单状态: {% if order.status == 0 %}
+                                     {{ order.status }} <span style="color: black">[未付款]</span>
+                                    {% elif order.status == 1 %}
+                                     {{ order.status }} <span style="color: black">[已付款,待发货]</span>
+                                    {% elif order.status == 2 %}
+                                    {{ order.status }} <span style="color: black">[已发货，待收货]</span>
+                                    {% elif order.status == 3 %}
+                                    {{ order.status }} <span style="color: black">[已收货，待评价]</span>
+                                    {% elif order.status == 4 %}
+                                    {{ order.status }} <span style="color: black">[已评价]</span>
+                                    {% endif %}
+                        </div>
+                        <div>
+                            订单发起时间:{{ order.createtime }}
+                        </div>
+                        <div>
+                            商品一览: <select name="" id="">
+                                        {% for cart in carts %}
+                                                <option value="">{{ cart.goods.e_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x{{ cart.number }}</option>
+                                        {% endfor %}
+                                    </select>
+                        </div>
+
+                    </span>
+                </span>
+        &nbsp;  </span>
+
+        </div>
+    </div>
+
+    <ul class="ll">
+        {% for cart in carts %}
+            <li class="merchantHeader">
+                <div id="has">
+                    <div class="checkbox">
+                        {% if cart.goods.isselect %}
+                            <i id="true" class="found have_this" flag="false" goods_id="{{ cart.goods.id }}"></i>
+                        {% else %}
+                            <i id="true" flag="false" goods_id="{{ cart.goods.id }}"></i>
+                        {% endif %}
+                    </div>
+                    <span class="merchantName">
+                        <img src="{{ cart.goods.smallimg1 }}" id="good_img">
+                    </span>
+                    <span id="top_food">{{ cart.goods.specification }}</span>
+                    <span id="top_price" data-price="{{ cart.goods.price }}">{{ cart.goods.price }}</span>
+                    <span id="top_num" data-num="{{ cart.number }}">{{ cart.number }}</span>
+                    <span id="top_total"></span>
+{#                    <button class="top_del" style="color: indigo" cart_id="{{ cart.id }}">删除该商品</button>#}
+
+                    <span class="payPrice">
+                    <span></span>
+                </span>
+                </div>
+            </li>
+
+        {% endfor %}
+
+        <!--<li class="show">-->
+        <!--<div class="ld1 ld">-->
+        <!--<div class="checkbox enableSelect show">-->
+        <!--<input type="hidden">-->
+        <!--<i></i>-->
+        <!--</div>-->
+        <!--<div class="img_view">-->
+        <!--<img src="../images/15411601_85X85.jpg">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="ld2 ld">-->
+        <!--<a>【价格含税】欧缇丽葡萄籽保湿爽肤水200ml</a>-->
+        <!--</div>-->
+        <!--<div class="ld3 ld">-->
+        <!--<span data-bind="text:attrsString"></span>-->
+        <!--</div>-->
+        <!--<div class="ld4 ld">¥149</div>-->
+        <!--<div class="ld6 ld">-->
+        <!--<span class="midde">-->
+        <!--<a class="less"></a>-->
+        <!--<input class="quantity_txt">-->
+        <!--<a class="add"></a>-->
+        <!--<br>-->
+        <!--<span class="canDelivery"></span>-->
+        <!--</span>-->
+        <!--</div>-->
+        <!--<div class="ld7 ld">-->
+        <!--<span class="font18" data-bind="text:'¥'+totalPayPrice()">¥149</span>-->
+        <!--</div>-->
+        <!--<div class="ld8 ld">-->
+        <!--<span class="midde">-->
+        <!--<a href="">删除</a>-->
+        <!--</span>-->
+        <!--</div>-->
+        <!--</li>-->
+    </ul>
+{#    <div class="jiesuan">#}
+{#        <div class="float_l" all="{{ isall|lower }}">#}
+{#            <div class="checkbox enableSelect show">#}
+{#            </div>#}
+{#            <span class="bd">已经选中&nbsp;<b id="now_num" class="selectNumber fb000a f18">0</b>&nbsp;件商品</span>#}
+            {#            <span class="bd2">总重量<b data-bind="text:checkedTotalWeight">0.00</b>kg</span>#}
+{#            <button id="delall" style="color: indigo">清空购物车</button>#}
+{#            <!--<a href="" id="dels">删除</a>-->#}
+{#        </div>#}
+{#        <div class="float_r">#}
+{#            <div class="quantity">#}
+{#                <p>#}
+{#                    <span>合计（不含运费）：</span>#}
+{#                    ¥<em class="price fb000a f18" id="count_num"></em>#}
+{#                </p>#}
+{#            </div>#}
+{#            <a class="pay" id="alipay">确认支付</a>#}
+{#        </div>#}
+{#    </div>#}
+</div>
+<div class="center">
+    <div class="web_map_My">
+        <a href="">
+            关于我们
+        </a>｜
+        <a href="">
+            联系我们
+        </a>｜
+        <a href="">
+            触屏版
+        </a>
+        <span class="copyright">
+                Copyright@华润万家有限公司  粤ICP备05036369号-4   ewj.com 版权所有
+            </span>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'js/goodcart.js' %}"></script>
 
 </body>
 </html>

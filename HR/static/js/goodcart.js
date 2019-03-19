@@ -3,6 +3,10 @@
  */
 $(function () {
 
+    if ($('.all_goods').text() == '0') {
+        $($('#only_pay')).hide()
+    }
+
     total()
 
     choose_goodsnum()
@@ -59,10 +63,11 @@ $(function () {
     $('#delall').click(function () {
         $.get('/delall/', function (response) {
             if (response.status == 1) {
-                $('.ll .merchantHeader').hide()
+                $('.ll .merchantHeader').empty()
                 $('.del_msg').show()
                 $('.all_goods').text(0)
                 $('#now_num').text(0)
+                $('#only_pay').hide()
                 total()
             }
         })
@@ -76,9 +81,13 @@ $(function () {
 
         $.get('/delone/', request_data, function (response) {
             if (response.status == 1) {
-                $that.parent().parent().hide()
+                $that.parent().parent().empty()
                 $('#now_num').text($('#now_num').text() - 1)
+                $('.all_goods').text($('.all_goods').text() - 1)
                 total()
+                if ($('.all_goods').text() == '0') {
+                    $($('#only_pay')).hide()
+                }
             }
         })
     })
@@ -117,5 +126,48 @@ $(function () {
         })
     })
 
+    $('.add').click(function () {
+        $that = $(this)
+        var $number = parseInt($(this).prev().text())
+        request_data = {
+            'cartid': $(this).attr('data-cartid')
+        }
 
-});
+        $.get('/addcartgoods/', request_data, function (response) {
+            if (response.status == 1) {
+                $number += 1
+                $that.prev().text($number)
+                $that.parent().parent().attr('data-num', $number)
+                total()
+            }
+
+
+        })
+
+
+    })
+
+    $('.less').click(function () {
+        $that = $(this)
+        var $number = parseInt($(this).next().text())
+        request_data = {
+            'cartid': $(this).attr('data-cartid')
+        }
+
+        $.get('/reducecartgoods/', request_data, function (response) {
+            if (response.status == 1) {
+                $number -= 1
+                if ($number < 1) {
+                    $number = 1
+                }
+                $that.next().text($number)
+                $that.parent().parent().attr('data-num', $number)
+                total()
+            }
+
+
+        })
+
+    })
+
+})
